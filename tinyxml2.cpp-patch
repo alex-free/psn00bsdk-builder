@@ -1,0 +1,13 @@
+--- "/c/Users/alex/Desktop/psn00bsdk-builder/psn00bsdk/tools/mkpsxiso/tinyxml2/tinyxml2 - Copy.cpp"	2023-11-12 01:28:03.735554600 -0500
++++ /c/Users/alex/Desktop/psn00bsdk-builder/psn00bsdk/tools/mkpsxiso/tinyxml2/tinyxml2.cpp	2023-11-12 01:25:36.510264100 -0500
+@@ -108,8 +108,8 @@
+ 	#define TIXML_FSEEK fseeko
+ 	#define TIXML_FTELL ftello
+ #elif defined(__unix__) && defined(__x86_64__)
+-	#define TIXML_FSEEK fseeko64
+-	#define TIXML_FTELL ftello64
++	#define TIXML_FSEEK fseeko
++	#define TIXML_FTELL ftello
+ #else
+ 	#define TIXML_FSEEK fseek
+ 	#define TIXML_FTELL ftell

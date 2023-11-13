@@ -3,16 +3,33 @@
 gccver=12.2.0
 binutilsver=2.40
 prefix=/usr/local/psn00bsdk
-export PATH=$PATH:"$prefix"/bin:"$prefix"/mipsel-none-elf/bin
-export PSN00BSDK_LIBS="$prefix"/psn00bsdk/libpsn00b
-sudo rm -f /usr/local/bin/psn00b-env
+
+is_msys2=$(uname -a | grep MSYS | wc -l)
+ret=$(dirname "$0")
 
 set -e
 
 if command -v dnf &> /dev/null; then
-    sudo dnf install -y autoconf automake g++ make libtool texinfo help2man ncurses-devel cmake tinyxml2-devel
+    sudo dnf install -y autoconf automake g++ make libtool texinfo help2man ncurses-devel cmake tinyxml2-devel git ninja-build
 elif command -v apt &> /dev/null; then
-    sudo apt install --yes build-essential cmake libtinyxml2-dev
+    sudo apt install --yes build-essential cmake libtinyxml2-dev git ninja-build
+elif command -v pacman &> /dev/null; then
+	if [ $is_msys2 -eq 1 ]; then
+		pacman --noconfirm -S autoconf libtool texinfo help2man ncurses git make cmake gcc patch ninja
+
+	else
+		echo "Error: You must use the MSYS2 MSYS Shell with this script to build on Windows. Please start this script in an MSYS2 MSYS window."
+		exit 1
+	fi
+else
+	echo "Error: Unknown package manager/OS"
+	exit 1
+fi
+
+if [ $is_msys2 -eq 1 ]; then
+	rm -f /usr/local/bin/psn00b-env
+else
+	sudo rm -f /usr/local/bin/psn00b-env
 fi
 
 tmp=$(mktemp -d --tmpdir psn00b.XXX)
@@ -25,9 +42,15 @@ cleanup()
 }
 trap cleanup EXIT
 
-sudo rm -rf "$prefix"
-sudo mkdir -p "$prefix"
-sudo chown -R $USER: "$prefix"
+if [ $is_msys2 -eq 1 ]; then
+	rm -rf "$prefix"
+	mkdir -p "$prefix"
+else
+	sudo rm -rf "$prefix"
+	sudo mkdir -p "$prefix"
+	sudo chown -R $USER: "$prefix"
+fi
+
 cd "$tmp"
 
 wget https://ftpmirror.gnu.org/gnu/binutils/binutils-"$binutilsver".tar.xz
@@ -58,16 +81,28 @@ cd gcc-build
   --with-float=soft --with-gnu-as --with-gnu-ld
 make -j`nproc`
 make install-strip
-cd ../
 
-cd "$prefix"
+cd ../
 git clone --recursive https://github.com/lameguy64/psn00bsdk
 cd psn00bsdk
-cmake --preset default . --install-prefix "$prefix" -G "Unix Makefiles"
+
+if [ $is_msys2 -gt 0 ]; then
+	patch -u tools/mkpsxiso/tinyxml2/tinyxml2.cpp -i "$ret"/tinyxml2.cpp-patch
+	patch -u tools/mkpsxiso/src/shared/platform.h -i "$ret"/platform.h-patch
+fi
+
+PATH=/usr/local/psn00bsdk/bin:$PATH
+PSN00BSDK_LIBS=/usr/local/psn00bsdk/lib/libpsn00b
+cmake --preset default . --install-prefix /usr/local/psn00bsdk
 cmake --build ./build
 cmake --install ./build
 
-echo -e '#!/bin/bash\n'"export PATH=\$PATH:"$prefix"/bin:"$prefix"/mipsel-none-elf/bin\nexport PSN00BSDK_LIBS="$prefix"/libpsn00b\necho \$PATH\necho\nbash" | sudo tee -a /usr/local/bin/psn00b-env
-sudo chmod -R 775 /usr/local/bin/psn00b-env
+if [ $is_msys2 -eq 1 ]; then
+	mkdir -p /usr/local/bin
+	echo -e '#!/bin/bash\n'"export PATH="$prefix"/bin:$PATH\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\necho\nbash" > /usr/local/bin/psn00b-env
+else
+	echo -e '#!/bin/bash\n'"export PATH="$prefix"/bin:$PATH\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\necho\nbash" | sudo tee -a /usr/local/bin/psn00b-env
+	sudo chmod 775 /usr/local/bin/psn00b-env
+fi
 
-echo "Execute the psnoob-env command to add the PSN00bSDK to your shell"
+echo "Execute the psn00b-env command to add the toolchain and sdk to your shell"

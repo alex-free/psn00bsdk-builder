@@ -4,30 +4,48 @@
 
 By Alex Free
 
-Build the [PSN00bSDK](https://github.com/lameguy64/psn00bsdk) by [Lameguy64](https://github.com/lameguy64) on APT (Debian/Ubuntu based distributions) and DNF (RedHat based distributions) with one command. PSN00bSDK builder installs everything to `/usr/local/psn00bsdk` in a self-contained manner, to not affect anything else on your system. A `/usr/local/bin/psn00b-env` command is provided which adds all the tools installed to `/usr/local/psn00bsdk` to your path, and additionally sets the proper `PSN00BSDK_LIBS` envar to enable use of the SDK in the current shell.
+Automatically build the [PSN00bSDK](https://github.com/lameguy64/psn00bsdk) by [Lameguy64](https://github.com/lameguy64) on Linux or Windows in a self-contained manner, to not affect anything else on your system. A `psn00b-env` command is provided which adds all the tools installed to `/usr/local/psn00bsdk` to your `$PATH`, and additionally sets the proper `PSN00BSDK_LIBS` envar to enable use of the SDK in the current shell.
 
-PSN00bSDK Builder currently will setup mipsel-none-elf GCC 12.2.0/Binutils 2.40 with the latest PSN00bSDK.
-
-## Links
-
-*   [Homepage](https://alex-free.github.io/psn00bsdk-builder)
-
-*   [Github](https://github.com/alex-free/psn00bsdk-builder)
+| [Homepage](https://alex-free.github.io/psn00bsdk-builder) | [Github](https://github.com/alex-free/psn00bsdk-builder) |
 
 ## Downloads
 
-_Tip:_ Use `git` to clone the latest version: 
+### Version 1.0.1 (11/13/2023)
 
-`git clone https://github.com/alex-free/psn00bsdk-builder`
+*   [PSN00bSDK Builder v1.0.1](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.1/psn00bsdk-builder-v1.0.1.zip)
 
-### Version 1.0 (8/5/2023)
+Changes:
 
-*   [PSN00bSDK Builder v1.0](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0/psn00bsdk-builder-v1.0.zip)
+*   MSYS2 Windows support.
+*   New `sdk.sh` script enables building of only the SDK (instead of building the entire toolchain and then sdk).
+*   Cleaner `psn00b-env` script.
+
+[Previous versions](changelog.md).
 
 ## Usage
+ 
+The PSN00bsdk builder installs everything to `/usr/local/psn00bsdk`. PSN00bSDK Builder currently will setup mipsel-none-elf GCC 12.2.0/Binutils 2.40 with the latest git commit of the PSN00bSDK at time of script execution.
 
-Download the latest release of PSN00bSDK builder, and execute the `build.sh` script on your Linux system.
+Supported Operating Systems:
+
+ * Windows 8.1/10/11 64 bit
+ * Debian and derivatives (Ubuntu, PopOS!, etc.)
+ * Fedora
+
+1) If your on Windows, install [MSYS2](https://www.msys2.org/) and **start the `MSYS2 MSYS` shell**. On Linux, open your terminal.
+
+2) Download the latest release and `cd` into the extracted directory. 
+
+3) Execute `./build.sh`. This will take quite awhile to complete since on the toolchain and sdk will are all compiled from source.
+
+4) To use the SDK/toolchain, execute the `psn00b-env` to add the toolchain/sdk to your `$PATH`, and to set the `PSN00BSDK_LIBS` env var. You'll need to do this every time you open a new Terminal window or `MSYS2 MSYS` window).
+
+5) After running the `./build.sh` script, you can use the `./sdk.sh` script to update the PSN00bSDK to the latest version at any time. This command does not rebuild the toolchain, which is much faster then running `./build.sh` again. To rebuild the toolchain and the sdk all over again, execute the `./build.sh` script once again.
+
+Tip 1: You can also use WSL on Windows instead of MSYS2. Just follow the linux specific instructions if using WSL.
+
+Tip 2: If you want to remove anything installed by either the `build.sh` or `sdk.sh` scripts at any time, just `rm -rf /usr/local/psn00bsdk`. The `build.sh` script in fact already does this when started before rebuilding everything from source.
 
 ## License
 
-PSN00bSDK Builder itself is released into the public domain, please see the file `unlicense.txt` for more info. The PSN00bSDK is released under [various licenses](https://github.com/Lameguy64/PSn00bSDK/blob/master/LICENSE.md).
+PSN00bSDK Builder itself is released into the public domain, please see the file `unlicense.txt` for more info. The PSN00bSDK is released under [various licenses](https://github.com/Lameguy64/PSn00bSDK/blob/master/LICENSE.md). The toolchain/compiler is released under the [GNU GPL v3.1](https://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html).

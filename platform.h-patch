@@ -1,0 +1,11 @@
+--- /c/Users/alex/Desktop/psn00bsdk-builder/psn00bsdk/tools/mkpsxiso/src/shared/platform.h.og	2023-11-12 01:45:09.896649900 -0500
++++ /c/Users/alex/Desktop/psn00bsdk-builder/psn00bsdk/tools/mkpsxiso/src/shared/platform.h	2023-11-12 01:45:37.756673000 -0500
+@@ -8,7 +8,7 @@
+ #include <sys/stat.h>
+ 
+ #include "fs.h"
+-
++#define stat64 stat
+ // Printf format for fs::path::c_str()
+ #ifdef _WIN32
+ #define stat64 _stat64
