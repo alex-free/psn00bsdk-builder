@@ -12,7 +12,7 @@ set -e
 if command -v dnf &> /dev/null; then
     sudo dnf install -y autoconf automake g++ make libtool texinfo help2man ncurses-devel cmake tinyxml2-devel git ninja-build
 elif command -v apt &> /dev/null; then
-    sudo apt install --yes build-essential cmake libtinyxml2-dev git ninja-build
+    sudo apt install --yes build-essential cmake libtinyxml2-dev git ninja-build libisl-dev texi2html texinfo help2man 
 elif command -v pacman &> /dev/null; then
 	if [ $is_msys2 -eq 1 ]; then
 		pacman --noconfirm -S autoconf libtool texinfo help2man ncurses git make cmake gcc patch ninja
@@ -29,7 +29,7 @@ fi
 if [ $is_msys2 -eq 1 ]; then
 	rm -f /usr/local/bin/psn00b-env
 else
-	sudo rm -f /usr/local/bin/psn00b-env
+	sudo rm -f '$prefix'
 fi
 
 tmp=$(mktemp -d --tmpdir psn00b.XXX)
@@ -91,17 +91,18 @@ if [ $is_msys2 -gt 0 ]; then
 	patch -u tools/mkpsxiso/src/shared/platform.h -i "$ret"/platform.h-patch
 fi
 
-PATH=/usr/local/psn00bsdk/bin:$PATH
-PSN00BSDK_LIBS=/usr/local/psn00bsdk/lib/libpsn00b
-cmake --preset default . --install-prefix /usr/local/psn00bsdk
+PATH="$prefix"/bin${PATH:+:${PATH}}
+PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
+
+cmake --preset default . --install-prefix "$prefix"
 cmake --build ./build
 cmake --install ./build
 
 if [ $is_msys2 -eq 1 ]; then
 	mkdir -p /usr/local/bin
-	echo -e '#!/bin/bash\n'"export PATH="$prefix"/bin:$PATH\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\necho\nbash" > /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' > /usr/local/bin/psn00b-env
 else
-	echo -e '#!/bin/bash\n'"export PATH="$prefix"/bin:$PATH\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\necho\nbash" | sudo tee -a /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' | sudo tee -a /usr/local/bin/psn00b-env
 	sudo chmod 775 /usr/local/bin/psn00b-env
 fi
 
