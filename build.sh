@@ -100,9 +100,9 @@ cmake --install ./build
 
 if [ $is_msys2 -eq 1 ]; then
 	mkdir -p /usr/local/bin
-	echo -e '#!/bin/bash\n'export PATH="$prefix"\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' > /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH'\n'bash\n > /usr/local/bin/psn00b-env
 else
-	echo -e '#!/bin/bash\n'export PATH="$prefix"\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' | sudo tee -a /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\nbash\n | sudo tee -a /usr/local/bin/psn00b-env
 	sudo chmod 775 /usr/local/bin/psn00b-env
 fi
 

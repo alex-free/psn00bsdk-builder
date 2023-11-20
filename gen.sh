@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ver=1.0.2
+ver=1.0.3
 release=psn00bsdk-builder-v$ver
 set -e
 
