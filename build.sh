@@ -3,10 +3,9 @@
 gccver=12.2.0
 binutilsver=2.40
 prefix=/usr/local/psn00bsdk
-
 is_msys2=$(uname -a | grep MSYS | wc -l)
-ret=$(dirname "$0")
-
+cd "$(dirname "$0")"
+ret=$(realpath .)
 set -e
 
 if command -v dnf &> /dev/null; then
@@ -16,7 +15,6 @@ elif command -v apt &> /dev/null; then
 elif command -v pacman &> /dev/null; then
 	if [ $is_msys2 -eq 1 ]; then
 		pacman --noconfirm -S autoconf libtool texinfo help2man ncurses git make cmake gcc patch ninja
-
 	else
 		echo "Error: You must use the MSYS2 MSYS Shell with this script to build on Windows. Please start this script in an MSYS2 MSYS window."
 		exit 1
@@ -48,13 +46,20 @@ if [ $is_msys2 -eq 1 ]; then
 else
 	sudo rm -rf "$prefix"
 	sudo mkdir -p "$prefix"
-	sudo chown -R $USER: "$prefix"
+	sudo chown -R $USER "$prefix"
 fi
 
 cd "$tmp"
 
 wget https://ftpmirror.gnu.org/gnu/binutils/binutils-"$binutilsver".tar.xz
 wget https://ftpmirror.gnu.org/gnu/gcc/gcc-"$gccver"/gcc-"$gccver".tar.xz
+git clone --recursive https://github.com/lameguy64/psn00bsdk
+
+if [ $is_msys2 -gt 0 ]; then
+	patch -u psn00bsdk/tools/mkpsxiso/tinyxml2/tinyxml2.cpp -i "$ret"/tinyxml2.cpp-patch
+	patch -u psn00bsdk/tools/mkpsxiso/src/shared/platform.h -i "$ret"/platform.h-patch
+fi
+
 echo "Extracting Binutils..."
 tar xf binutils-"$binutilsver".tar.xz
 echo "Extracting GCC..."
@@ -82,14 +87,7 @@ cd gcc-build
 make -j`nproc`
 make install-strip
 
-cd ../
-git clone --recursive https://github.com/lameguy64/psn00bsdk
-cd psn00bsdk
-
-if [ $is_msys2 -gt 0 ]; then
-	patch -u tools/mkpsxiso/tinyxml2/tinyxml2.cpp -i "$ret"/tinyxml2.cpp-patch
-	patch -u tools/mkpsxiso/src/shared/platform.h -i "$ret"/platform.h-patch
-fi
+cd "$tmp"/psn00bsdk
 
 PATH="$prefix"/bin${PATH:+:${PATH}}
 PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
