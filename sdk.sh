@@ -1,8 +1,8 @@
 #!/bin/bash
 
 prefix=/usr/local/psn00bsdk
-PATH="$prefix"/bin${PATH:+:${PATH}}
-PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
+export PATH="$prefix"/bin${PATH:+:${PATH}}
+export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
 set -e
 is_msys2=$(uname -a | grep MSYS | wc -l)
 

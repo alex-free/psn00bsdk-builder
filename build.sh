@@ -51,14 +51,15 @@ fi
 
 cd "$tmp"
 
-wget https://ftpmirror.gnu.org/gnu/binutils/binutils-"$binutilsver".tar.xz
-wget https://ftpmirror.gnu.org/gnu/gcc/gcc-"$gccver"/gcc-"$gccver".tar.xz
 git clone --recursive https://github.com/lameguy64/psn00bsdk
 
 if [ $is_msys2 -gt 0 ]; then
 	patch -u psn00bsdk/tools/mkpsxiso/tinyxml2/tinyxml2.cpp -i "$ret"/tinyxml2.cpp-patch
 	patch -u psn00bsdk/tools/mkpsxiso/src/shared/platform.h -i "$ret"/platform.h-patch
 fi
+
+wget https://ftpmirror.gnu.org/gnu/binutils/binutils-"$binutilsver".tar.xz
+wget https://ftpmirror.gnu.org/gnu/gcc/gcc-"$gccver"/gcc-"$gccver".tar.xz
 
 echo "Extracting Binutils..."
 tar xf binutils-"$binutilsver".tar.xz
@@ -89,8 +90,8 @@ make install-strip
 
 cd "$tmp"/psn00bsdk
 
-PATH="$prefix"/bin${PATH:+:${PATH}}
-PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
+export PATH="$prefix"/bin${PATH:+:${PATH}}
+export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b
 
 cmake --preset default . --install-prefix "$prefix"
 cmake --build ./build
