@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.0.3 (11/20/2023)
+
+*   [PSN00bSDK Builder v1.0.3](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.3/psn00bsdk-builder-v1.0.3.zip)
+
+Changes:
+
+*   Fixed an issue with `psn00b-env` not putting the proper prefix+bin directory in $PATH.
+
 ## Version 1.0.2 (11/16/2023)
 
 *   [PSN00bSDK Builder v1.0.2](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.2/psn00bsdk-builder-v1.0.2.zip)
