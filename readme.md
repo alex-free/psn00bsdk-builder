@@ -10,13 +10,13 @@ Automatically build the [PSN00bSDK](https://github.com/lameguy64/psn00bsdk) by [
 
 ## Downloads
 
-### Version 1.0.4 (1/23/2024)
+### Version 1.0.5 (1/25/2024)
 
-*   [PSN00bSDK Builder v1.0.4](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.4/psn00bsdk-builder-v1.0.4.zip)
+*   [PSN00bSDK Builder v1.0.5](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.5/psn00bsdk-builder-v1.0.5.zip)
 
 Changes:
 
-*   Fixed an issue with compiling the psn00bsdk.
+*   Improved `psn00b-env`.
 
 [Previous versions](changelog.md).
 
@@ -36,13 +36,13 @@ Supported Operating Systems:
 
 3) Execute `./build.sh`. This will take quite awhile to complete since on the toolchain and sdk will are all compiled from source.
 
-4) To use the SDK/toolchain, execute the `psn00b-env` to add the toolchain/sdk to your `$PATH`, and to set the `PSN00BSDK_LIBS` env var. You'll need to do this every time you open a new Terminal window or `MSYS2 MSYS` window).
+To use the SDK/toolchain execute the `psn00b-env` to add the toolchain/sdk to your `$PATH`, and to set the `PSN00BSDK_LIBS` env var. This must be done for each new shell you want to use it with.
 
-5) After running the `./build.sh` script, you can use the `./sdk.sh` script to update the PSN00bSDK to the latest version at any time. This command does not rebuild the toolchain, which is much faster then running `./build.sh` again. To rebuild the toolchain and the sdk all over again, execute the `./build.sh` script once again.
+After running the `./build.sh` script, you can use the `./sdk.sh` script to update the PSN00bSDK to the latest version at any time. This command does not rebuild the toolchain, which is much faster then running `./build.sh` again. To rebuild the toolchain and the sdk all over again, execute the `./build.sh` script once again.
 
-Tip 1: You can also use WSL on Windows instead of MSYS2. Just follow the linux specific instructions if using WSL.
+You can also use WSL on Windows instead of MSYS2. Just follow the linux specific instructions if using WSL. 
 
-Tip 2: If you want to remove anything installed by either the `build.sh` or `sdk.sh` scripts at any time, just `rm -rf /usr/local/psn00bsdk`. The `build.sh` script in fact already does this when started before rebuilding everything from source.
+If you want to remove anything installed by either the `build.sh` or `sdk.sh` scripts at any time, just `rm -rf /usr/local/psn00bsdk`. The `build.sh` script in fact already does this when started before rebuilding everything from source.
 
 ## License
 

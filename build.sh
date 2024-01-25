@@ -24,11 +24,8 @@ else
 	exit 1
 fi
 
-if [ $is_msys2 -eq 1 ]; then
-	rm -f /usr/local/bin/psn00b-env
-else
-	sudo rm -f '$prefix'
-fi
+sudo rm -rf "$prefix"
+sudo rm -f /usr/local/bin/psn00b-env
 
 tmp=$(mktemp -d --tmpdir psn00b.XXX)
 
@@ -99,10 +96,10 @@ cmake --install ./build
 
 if [ $is_msys2 -eq 1 ]; then
 	mkdir -p /usr/local/bin
-	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH'\n'bash\n > /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' > /usr/local/bin/psn00b-env
 else
-	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}\nexport PSN00BSDK_LIBS="$prefix"/lib/libpsn00b\necho \$PATH\nbash\n | sudo tee -a /usr/local/bin/psn00b-env
-	sudo chmod 775 /usr/local/bin/psn00b-env
+	echo -e '#!/bin/bash\n'export PATH="$prefix"/bin\${PATH:+:\${PATH}}'\n'export PSN00BSDK_LIBS="$prefix"/lib/libpsn00b'\n'echo \$PATH'\n'bash'\n' | sudo tee -a /usr/local/bin/psn00b-env
+	sudo chmod 755 /usr/local/bin/psn00b-env
 fi
 
-echo "Execute the psn00b-env command to add the toolchain and sdk to your shell"
+echo "Execute the psn00b-env command to add the toolchain and sdk to the current shell"

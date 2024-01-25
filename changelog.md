@@ -1,5 +1,13 @@
 # Changelog
 
+## Version 1.0.4 (1/23/2024)
+
+*   [PSN00bSDK Builder v1.0.4](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.4/psn00bsdk-builder-v1.0.4.zip)
+
+Changes:
+
+*   Fixed an issue with compiling the psn00bsdk.
+
 ## Version 1.0.3 (11/20/2023)
 
 *   [PSN00bSDK Builder v1.0.3](https://github.com/alex-free/psn00bsdk-builder/releases/download/v1.0.3/psn00bsdk-builder-v1.0.3.zip)
